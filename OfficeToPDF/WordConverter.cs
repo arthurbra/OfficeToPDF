@@ -63,6 +63,7 @@ namespace OfficeToPDF
                 Boolean bitmapMissingFonts = !(Boolean)options["word_ref_fonts"];
                 Boolean isTempWord = (options.ContainsKey("IsTempWord") && (Boolean)options["IsTempWord"]);
                 
+
                 bool pdfa = (Boolean)options["pdfa"] ? true : false;
                 String writePassword = "";
                 String readPassword = "";
@@ -651,6 +652,8 @@ namespace OfficeToPDF
         // Update all the fields in a document
         private static void UpdateDocumentFields(Microsoft.Office.Interop.Word.Document doc, Microsoft.Office.Interop.Word.Application word, String inputFile, Hashtable options)
         {
+            Boolean deleteCurrentDateFields = (Boolean)options["delete_current_date_fields"];
+
             // Update fields quickly if it is safe to do so. We have
             // to check for broken links as they may raise Word dialogs or leave broken content
             if ((Boolean)options["word_field_quick_update"] ||
@@ -690,13 +693,13 @@ namespace OfficeToPDF
                             for (var si = 1; si <= sectionFields.Count; si++)
                             {
                                 var sectionField = sectionFields[si];
-                                UpdateField(sectionField, word, inputFile);
+                                UpdateField(sectionField, word, inputFile, deleteCurrentDateFields);
                                 ReleaseCOMObject(sectionField);
                             }
                         }
 
-                        UpdateHeaderFooterFields(headers, word, inputFile);
-                        UpdateHeaderFooterFields(footers, word, inputFile);
+                        UpdateHeaderFooterFields(headers, word, inputFile, deleteCurrentDateFields);
+                        UpdateHeaderFooterFields(footers, word, inputFile, deleteCurrentDateFields);
 
                         ReleaseCOMObject(footers);
                         ReleaseCOMObject(headers);
@@ -721,14 +724,14 @@ namespace OfficeToPDF
                 for (var fi = 1; fi <= docFields.Count; fi++)
                 {
                     var docField = docFields[fi];
-                    UpdateField(docField, word, inputFile);
+                    UpdateField(docField, word, inputFile, deleteCurrentDateFields);
                     ReleaseCOMObject(docField);
                 }
             }
 
             foreach (Range range in storyRanges)
             {
-                UpdateFieldsInRange(range, word, inputFile);
+                UpdateFieldsInRange(range, word, inputFile, deleteCurrentDateFields);
                 ReleaseCOMObject(range);
             }
 
@@ -737,14 +740,14 @@ namespace OfficeToPDF
         }
 
         // update fields in a header or footer
-        private static void UpdateHeaderFooterFields(HeadersFooters list, Microsoft.Office.Interop.Word.Application word, String filename)
+        private static void UpdateHeaderFooterFields(HeadersFooters list, Microsoft.Office.Interop.Word.Application word, String filename, Boolean deleteCurrentDateFields)
         {
             foreach (HeaderFooter item in list)
             {
                 if (item.Exists && !item.LinkToPrevious)
                 {
                     var range = item.Range;
-                    UpdateFieldsInRange(range, word, filename);
+                    UpdateFieldsInRange(range, word, filename, deleteCurrentDateFields);
                     ReleaseCOMObject(range);
                 }
                 ReleaseCOMObject(item);
@@ -752,7 +755,7 @@ namespace OfficeToPDF
         }
 
         // update all fields in a range
-        private static void UpdateFieldsInRange(Range range, Microsoft.Office.Interop.Word.Application word, String filename)
+        private static void UpdateFieldsInRange(Range range, Microsoft.Office.Interop.Word.Application word, String filename, Boolean deleteCurrentDateFields)
         {
             var rangeFields = range.Fields;
             if (rangeFields.Count > 0)
@@ -760,7 +763,7 @@ namespace OfficeToPDF
                 for (var i = 1; i <= rangeFields.Count; i++)
                 {
                     var field = rangeFields[i];
-                    UpdateField(field, word, filename);
+                    UpdateField(field, word, filename, deleteCurrentDateFields);
                     ReleaseCOMObject(field);
                 }
             }
@@ -768,15 +771,20 @@ namespace OfficeToPDF
         }
 
         // Update a specific field
-        private static void UpdateField(Field field, Microsoft.Office.Interop.Word.Application word, String filename)
+        private static void UpdateField(Field field, Microsoft.Office.Interop.Word.Application word, String filename, Boolean deleteCurrentTimeFields)
         {
+            if (field.Type == WdFieldType.wdFieldTime || field.Type == WdFieldType.wdFieldDate)
+            {
+                if (deleteCurrentTimeFields)
+                {
+                    field.Delete();
+                    return;
+                }
+            }
             switch (field.Type)
             {
                 case WdFieldType.wdFieldTime:
                 case WdFieldType.wdFieldDate:
-                    field.Delete();
-                    break;
-
                 case WdFieldType.wdFieldAuthor:
                 case WdFieldType.wdFieldAutoText:
                 case WdFieldType.wdFieldComments:
