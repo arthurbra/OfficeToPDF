@@ -772,11 +772,15 @@ namespace OfficeToPDF
         {
             switch (field.Type)
             {
+                case WdFieldType.wdFieldTime:
+                case WdFieldType.wdFieldDate:
+                    field.Delete();
+                    break;
+
                 case WdFieldType.wdFieldAuthor:
                 case WdFieldType.wdFieldAutoText:
                 case WdFieldType.wdFieldComments:
                 case WdFieldType.wdFieldCreateDate:
-                case WdFieldType.wdFieldDate:
                 case WdFieldType.wdFieldDocProperty:
                 case WdFieldType.wdFieldDocVariable:
                 case WdFieldType.wdFieldEditTime:
@@ -801,7 +805,6 @@ namespace OfficeToPDF
                 case WdFieldType.wdFieldSection:
                 case WdFieldType.wdFieldSectionPages:
                 case WdFieldType.wdFieldSubject:
-                case WdFieldType.wdFieldTime:
                 case WdFieldType.wdFieldTitle:
                 case WdFieldType.wdFieldTOA:
                 case WdFieldType.wdFieldTOAEntry:

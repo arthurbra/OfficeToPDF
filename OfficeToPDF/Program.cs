@@ -695,14 +695,6 @@ namespace OfficeToPDF
                     case "emz":
                     case "dwg":
                     case "dxf":
-                    case "wmf":
-                        // Visio
-                        if ((Boolean)options["verbose"])
-                        {
-                            Console.WriteLine("Converting with Visio converter");
-                        }
-                        converted = VisioConverter.Convert(inputFile, outputFile, options);
-                        break;
                     case "pub":
                         // Publisher
                         if ((Boolean)options["verbose"])
@@ -728,14 +720,6 @@ namespace OfficeToPDF
                             Console.WriteLine("Converting with Outlook converter");
                         }
                         converted = OutlookConverter.Convert(inputFile, outputFile, options);
-                        break;
-                    case "mpp":
-                        // Project
-                        if ((Boolean)options["verbose"])
-                        {
-                            Console.WriteLine("Converting with Project converter");
-                        }
-                        converted = ProjectConverter.Convert(inputFile, outputFile, options);
                         break;
                 }
             }

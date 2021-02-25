@@ -175,10 +175,8 @@
     <Compile Include="XpsConverter.cs" />
     <Compile Include="PDFBookmark.cs" />
     <Compile Include="Converter.cs" />
-    <Compile Include="ProjectConverter.cs" />
     <Compile Include="OutlookConverter.cs" />
     <Compile Include="PublisherConverter.cs" />
-    <Compile Include="VisioConverter.cs" />
     <Compile Include="PowerpointConverter.cs" />
     <Compile Include="ExcelConverter.cs" />
     <Compile Include="Program.cs" />
