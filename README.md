@@ -41,9 +41,10 @@ The following file types can be converted:
 * Word (.doc, .dot,&nbsp; .docx, .dotx, .docm, .dotm, .rtf, .wpd)
 * Excel&nbsp; (.xls, .xlsx, .xlsm, .xlsb, .xlt, .xltx, .xltm, .csv)
 * Powerpoint (.ppt, .pptx, .pptm, .pps, .ppsx, .ppsm, .pot, .potx, .potm)
-* Visio (.vsd, .vsdx, .vsdm, .svg) [Requires &gt;= Visio 2013 for .svg, .vsdx and .vsdm support]
-* Publisher (.pub) </li><li>Outlook (.msg, .vcf, .ics)
-* Project (.mpp) [Requires Project &gt;= 2010 for .mpp support]
+* (not supported in this fork) Visio (.vsd, .vsdx, .vsdm, .svg) [Requires &gt;= Visio 2013 for .svg, .vsdx and .vsdm support]
+* (not supported in this fork) Publisher (.pub) 
+* Outlook (.msg, .vcf, .ics)
+* (not supported in this fork) Project (.mpp) [Requires Project &gt;= 2010 for .mpp support]
 * OpenOffice (.odt, .odp, .ods)
 
 Conversion of Visio, Publisher and Project&nbsp;files require that the Visio, Publisher and Project
@@ -68,6 +69,7 @@ The following optional switches can be used:
 
 | Switch | Description |
 | ------ | ----------- |
+| /delete_current_date_fields| Delete fields of type DATE and TIME in word documents. | 
 | /bookmarks                 | create bookmarks in the PDF when they are supported by the Office application |
 | /readonly                  | attempts to open the source document in read-only mode |
 | /print                     | create high-quality PDFs optimised for print |
